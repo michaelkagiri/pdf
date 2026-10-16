@@ -1,0 +1,107 @@
+:root {
+  --bg: #000;
+  --fg: #fff;
+  --muted: #a3a3a3;
+  --card: #0f0f0f;
+  --line: #2b2b2b;
+  --error: #ff7b72;
+  --content-max: 900px; /* width of the centered column for the reader bars on desktop */
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+button {
+  font: inherit; color: var(--fg); background: var(--card);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; cursor: pointer;
+}
+button:hover { border-color: #666; }
+button.primary { background: #fff; color: #000; border-color: #fff; font-weight: 600; }
+button.ghost { color: var(--muted); padding: 8px 10px; }
+button.on { background: #fff; color: #000; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.error { color: var(--error); font-size: 14px; }
+.center { text-align: center; padding: 24px; }
+
+/* ---------- Library ---------- */
+.library { width: 100%; max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
+h1 { font: 700 28px/1.2 Georgia, "Times New Roman", serif; margin: 8px 0 4px; }
+.drop { border: 2px dashed var(--line); border-radius: 14px; padding: 22px; text-align: center; margin: 18px 0; }
+.drop.over { border-color: #fff; }
+.drop p { margin: 8px 0 0; }
+.book { display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-bottom: 10px; }
+.book .info { flex: 1; min-width: 0; cursor: pointer; }
+.book .title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.progress { height: 4px; background: var(--line); border-radius: 2px; margin-top: 6px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: #fff; }
+.storage { margin-top: 22px; }
+
+/* ---------- Reader ---------- */
+.reader {
+  position: fixed;
+  inset: 0;
+  height: 100dvh; /* tracks the visible area on mobile (address bar showing/hiding) */
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #0a0a0a;
+  border: 0 solid var(--line);
+}
+/* On wide screens, keep bar contents in a centered column that lines up with the page */
+@media (min-width: 960px) {
+  .bar { padding-inline: calc((100% - var(--content-max)) / 2); }
+}
+.bar.top { border-bottom-width: 1px; }
+.bar.bottom { border-top-width: 1px; justify-content: center; flex-wrap: nowrap; }
+.ttl { flex: 1; min-width: 0; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bar.bottom button { min-width: 42px; }
+.bar input {
+  width: 58px; text-align: center; font: inherit; padding: 8px 4px;
+  color: var(--fg); background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+}
+
+/* Reading area: fills all remaining space; the canvas is centered inside it */
+.wrap {
+  flex: 1;
+  min-height: 0; /* lets it shrink instead of pushing the bottom bar off-screen */
+  display: flex;
+  overflow: hidden; /* page always fits at 100% zoom, so no scrollbars needed */
+  background: #000;
+}
+.wrap.zoomed {
+  overflow: auto; /* only scroll once the user zooms in */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+canvas {
+  display: block;
+  flex: none;
+  margin: auto; /* centers horizontally + vertically, but still scrolls to every edge when zoomed */
+  background: #fff;
+}
+canvas.night { filter: invert(1) hue-rotate(180deg); }
+
+/* ---------- Small phones ---------- */
+@media (max-width: 420px) {
+  .bar { gap: 6px; padding: 6px 8px; }
+  .bar button { padding: 8px 10px; }
+  .bar.bottom button { min-width: 38px; }
+  .bar input { width: 50px; padding: 7px 2px; }
+  .library { padding: 16px 12px 32px; }
+  h1 { font-size: 24px; }
+}
